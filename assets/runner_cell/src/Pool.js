@@ -39,6 +39,16 @@ const Pool = ({ fields, handleChange, handleBlur }) => (
         required
       />
     </div>
+    <div className="w-36">
+      <TextField
+        type="text"
+        name="copy_paths"
+        label="Copy paths"
+        value={fields.copy_paths}
+        onChange={handleChange}
+        onBlur={handleBlur}
+      />
+    </div>
     <Switch
       label="Compress"
       name="compress"

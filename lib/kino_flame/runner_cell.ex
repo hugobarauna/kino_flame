@@ -29,6 +29,7 @@ defmodule KinoFLAME.RunnerCell do
       "backend" => backend,
       "min" => attrs["min"] || 0,
       "max" => attrs["max"] || 1,
+      "copy_paths" => attrs["copy_paths"] || [],
       "compress" => Map.get(attrs, "compress", false),
       "max_concurrency" => attrs["max_concurrency"] || 10,
       "fly_cpus" => attrs["fly_cpus"] || 1,
@@ -154,7 +155,7 @@ defmodule KinoFLAME.RunnerCell do
   def to_attrs(%{assigns: %{fields: fields, k8s_pod_template: k8s_pod_template}}) do
     fields = Map.put(fields, "k8s_pod_template", k8s_pod_template)
 
-    shared_keys = ["backend", "name", "min", "max", "max_concurrency", "compress"]
+    shared_keys = ["backend", "name", "min", "max", "max_concurrency", "copy_paths", "compress"]
 
     backend_keys =
       case fields["backend"] do
@@ -250,6 +251,21 @@ defmodule KinoFLAME.RunnerCell do
     # image is involved. Those images are generally large, so it takes
     # a while to pull them, unless they are already in the Fly cache.
 
+    copy_paths =
+      case attrs["copy_paths"] do
+        [] ->
+          []
+
+        "" ->
+          []
+
+        nil ->
+          []
+
+        variable_name ->
+          copy_paths_variable_name = Macro.var(String.to_atom(variable_name), nil)
+      end
+
     quote do
       Kino.start_child(
         {FLAME.Pool,
@@ -258,6 +274,7 @@ defmodule KinoFLAME.RunnerCell do
            start_apps: true,
            sync_beams: Kino.beam_paths(),
            compress: unquote(attrs["compress"]),
+           copy_paths: unquote(copy_paths),
            verbose: true
          ],
          min: unquote(attrs["min"]),
