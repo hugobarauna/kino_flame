@@ -267,7 +267,7 @@ defmodule KinoFLAME.RunnerCell do
          idle_shutdown_after: :timer.minutes(1),
          timeout: :infinity,
          track_resources: true,
-         log: info,
+         log: :info,
          backend: unquote(quoted_backend)}
       )
     end
