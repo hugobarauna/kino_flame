@@ -257,7 +257,8 @@ defmodule KinoFLAME.RunnerCell do
          code_sync: [
            start_apps: true,
            sync_beams: Kino.beam_paths(),
-           compress: unquote(attrs["compress"])
+           compress: unquote(attrs["compress"]),
+           verbose: true
          ],
          min: unquote(attrs["min"]),
          max: unquote(attrs["max"]),
@@ -266,6 +267,7 @@ defmodule KinoFLAME.RunnerCell do
          idle_shutdown_after: :timer.minutes(1),
          timeout: :infinity,
          track_resources: true,
+         log: info,
          backend: unquote(quoted_backend)}
       )
     end
