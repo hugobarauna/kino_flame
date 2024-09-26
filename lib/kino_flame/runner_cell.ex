@@ -263,7 +263,7 @@ defmodule KinoFLAME.RunnerCell do
           []
 
         variable_name ->
-          copy_paths_variable_name = Macro.var(String.to_atom(variable_name), nil)
+          Macro.var(String.to_atom(variable_name), nil)
       end
 
     quote do
